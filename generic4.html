@@ -1,0 +1,138 @@
+﻿<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Chiaki Wada-Close | Projects</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<div class="inner">
+
+					<!-- Logo -->
+					<a href="index.html" class="logo">
+						<span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Chiaki Wada-Close | Home</span>
+					</a>
+
+					<!-- Nav -->
+					<nav>
+						<ul>
+							<li><a href="#menu">Menu</a></li>
+						</ul>
+					</nav>
+
+				</div>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="generic1.html">Visual Studio C#</a></li>
+					<li><a href="generic2.html">Android Studio Applications</a></li>
+					<li><a href="generic3.html">Group Projects</a></li>
+					<li><a href="generic4.html">SQL Database</a></li>
+					<li><a href="generic5.html">Other Skills</a></li>
+					<li><a href="generic6.html">About Me</a></li>
+				</ul>
+			</nav>
+
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+					<h1>SQL Database</h1>
+					<span class="image main"><img src="images/Database03.jpg" alt="" /></span>
+					<h3>User procedure</h3>Data resource : MS Adventure Works 2017
+					<p>
+						Display a list of employee list that has a two input parameters 1) DepartmentName, 2)SortOrder<br />
+						The list of employees based on their current Department. When the input parameter DeapartmentName is "ALL", <br />
+						the list shold include all departments wiht the current employees listed.<br />
+						When the input parameter SortOrder is anything other than a D or E, a error message will be displayed instead of the list.
+					</p>
+
+					<pre>
+					<code>
+CREATE PROC usp_EmployeeList (@DeptName nvarchar(50), @SortOrder nvarchar(10)) AS
+	BEGIN TRY
+	IF @SortOrder LIKE '[DE]%'
+	SELECT
+		CASE
+		WHEN @DeptName = 'ALL' THEN Dept.Name
+		ELSE @DeptName
+		END	AS DeptName, LastName+','+FirstName AS FullName, EmailAddress,
+		CASE
+		WHEN PNT.Name='Work' THEN PhoneNumber
+		ELSE ' '
+		End AS WorkPhone,
+		CASE WHEN PNT.Name='Cell' THEN PhoneNumber
+		ELSE ' '
+		END AS CellPhone
+		FROM HumanResources.Employee E
+			JOIN HumanResources.EmployeeDepartmentHistory EDH ON E.BusinessEntityID=EDH.BusinessEntityID
+			JOIN HumanResources.Department Dept ON EDH.DepartmentID = Dept.DepartmentID
+			JOIN Person.Person PP ON E.BusinessEntityID=PP.BusinessEntityID
+			JOIN Person.EmailAddress PEA ON PP.BusinessEntityID = PEA.BusinessEntityID
+			JOIN Person.PersonPhone Phone ON PP.BusinessEntityID = Phone.BusinessEntityID
+			JOIN Person.PhoneNumberType PNT ON Phone.PhoneNumberTypeID = PNT.PhoneNumberTypeID
+	WHERE EndDate IS NULL
+	ORDER BY Dept.Name
+	ELSE PRINT N'Invalid Sort Parameter'
+	END TRY
+BEGIN CATCH
+	PRINT 'Invalid Sort Parameter' ROLLBACK
+END CATCH
+
+
+						   </code>
+						</pre>
+					<h3>Execution query</h3>
+					<pre><code>EXEC usp_EmployeeList @DeptName = "Purchasing", @SortOrder = "department"</code></pre>
+					<img src="images\UserProcExe.jpg" alt="" />
+					<pre><code>EXEC usp_EmployeeList @DeptName = "ALL", @SortOrder = "department"</code></pre>
+					<img src="images\UserProcExe2.jpg" alt="" />
+
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<section>
+						<h2>Contact</h2>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/chiaki-wada-close-798b4658/" class="icon brands style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/cwada0202" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li>
+							<li><a href="tel:+14053396590" class="icon solid style2 fa-phone"><span class="label">Phone</span></a></li>
+							<li><a href="mailto:cwada@uco.edu" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
+						</ul>
+					</section>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved</li>
+						<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
